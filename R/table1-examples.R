@@ -86,10 +86,6 @@ tbl_summary(
 tbl_summary(nlsy,
 						by = sex_cat,
 						include = c(sex_cat,, region_cat, race_eth_cat, income, starts_with("sleep")),
-						type = all_continuous() ~ "continuous2",
-						statistic = all_continuous() ~ c (
-							"{N_nonmiss}", "{median}", "{p10}", "{p90}", "{min}", "{max}"
-						),
 						label = list(region_cat ~ "Region",
 												 race_eth_cat ~ "Race/Ethnicity",
 												 income ~ "Income",
@@ -99,6 +95,31 @@ tbl_summary(nlsy,
 	add_p (test = list(
 		all_continuous() ~ "t.test",
 		all_categorical() ~ "chisq.test"
-	)) %>% add_overall(col_label = "Total") %>%
+	)) %>% add_overall(col_label = "**Total** N = {N}" ) %>%
 	bold_labels()
 
+
+##For the income variable, show the 10th and 90th percentiles of income with 3
+##digits, and for the sleep variables, show the min and the max with 1 digit.
+
+tbl_summary(nlsy,
+						by = sex_cat,
+						include = c(sex_cat,, region_cat, race_eth_cat, income, starts_with("sleep")),
+						label = list(region_cat ~ "Region",
+												 race_eth_cat ~ "Race/Ethnicity",
+												 income ~ "Income",
+												 sleep_wknd ~ "Weekend Sleep",
+												 sleep_wkdy ~ "Weekday Sleep"),
+						missing_text = "Missing",
+					statistic = list(starts_with("sleep") ~ "min = {min}; max = {max}",
+													 income =  "({p10}, {p90})"),
+						digits = list(starts_with("sleep") ~ c(1, 1),
+													income ~ c(3, 3))
+
+						) %>%
+
+	add_p (test = list(
+		all_continuous() ~ "t.test",
+		all_categorical() ~ "chisq.test"
+	)) %>% add_overall(col_label = "**Total** N = {N}" ) %>%
+	bold_labels()
