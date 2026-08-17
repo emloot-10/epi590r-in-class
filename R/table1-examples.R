@@ -82,3 +82,23 @@ tbl_summary(
   modify_caption("**Participant characteristics**")
 
 
+#make a table summary
+tbl_summary(nlsy,
+						by = sex_cat,
+						include = c(sex_cat,, region_cat, race_eth_cat, income, starts_with("sleep")),
+						type = all_continuous() ~ "continuous2",
+						statistic = all_continuous() ~ c (
+							"{N_nonmiss}", "{median}", "{p10}", "{p90}", "{min}", "{max}"
+						),
+						label = list(region_cat ~ "Region",
+												 race_eth_cat ~ "Race/Ethnicity",
+												 income ~ "Income",
+												 sleep_wknd ~ "Weekend Sleep",
+												 sleep_wkdy ~ "Weekday Sleep"),
+						missing_text = "Missing") %>%
+	add_p (test = list(
+		all_continuous() ~ "t.test",
+		all_categorical() ~ "chisq.test"
+	)) %>% add_overall(col_label = "Total") %>%
+	bold_labels()
+
