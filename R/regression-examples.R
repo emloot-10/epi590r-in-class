@@ -131,4 +131,99 @@ tbl_merge(list(tbl_no_int, tbl_int),
   tab_spanner = c("**Model 1**", "**Model 2**")
 )
 
+#Question 3: Each of the univariate regression examples held the outcome (y =)
+#constant, while varying the predictor variables with include =. You can also
+#look at one predictor across several outcomes. Create a univariate regression
+#table looking at the association between sex (sex_cat) as the x = variable and
+#each of nsibs, sleep_wkdy, and sleep_wknd, and income.
 
+logistic<-tbl_uvregression(
+	nlsy,
+	x = sex_cat,
+	include = c(
+		nsibs, sleep_wkdy,
+		sleep_wknd, income
+	),
+	method = lm
+)
+
+
+#Question 4: Fit a Poisson regression (family = poisson()) for the number of
+#siblings, using at least 3 predictors of your choice. Create a nice table
+#displaying your Poisson regression and its exponentiated coefficients.
+
+
+tbl_regression(
+	poisson_model,
+	exponentiate = TRUE,
+	label = list(
+		sex_cat ~ "Sex",
+		eyesight_cat ~ "Eyesight",
+		income = "Income"
+	)
+)
+poisson_model <- glm(nsibs ~ eyesight_cat + sex_cat + income,
+											data = nlsy, family = poisson()
+)
+
+
+#Question 5: Instead of odds ratios for wearing glasses, as in the example in
+#the slides., we want risk ratios. We can do this by specifying in the
+#regression family = binomial(link = "log"). Regress glasses on eyesight_cat and
+#sex_cat and create a table showing the risk ratios and confidence intervals
+#from this regression.
+
+logbino<-tbl_uvregression(
+	nlsy,
+	y = glasses,
+	include = c(
+		sex_cat,
+		eyesight_cat
+	),
+	method = glm,
+	method.args = list(family = binomial(link="log")),
+	exponentiate = TRUE
+)
+
+
+#Question 6: Make a table comparing the logistic and the log-binomial results.
+#OF THE GLASSES ONE (q5)
+
+# logistic model
+logistic_model <- glm(glasses ~ eyesight_cat + sex_cat,
+											data = nlsy, family = binomial()
+)
+
+#log-bino model
+logistic_bino_model <- glm(glasses ~ eyesight_cat + sex_cat,
+											data = nlsy, family = binomial(link = "log")
+)
+
+tbl_log <-tbl_regression(
+	logistic_model,
+	exponentiate = TRUE,
+	label = list(
+		sex_cat ~ "Sex",
+		eyesight_cat ~ "Eyesight"
+	)
+)
+
+tbl_log_bino <-tbl_uvregression(
+	nlsy,
+	y = glasses,
+	include = c(
+		sex_cat,
+		eyesight_cat
+	),
+	method = glm,
+	method.args = list(family = binomial(link="log")),
+	exponentiate = TRUE,
+	label = list(
+		sex_cat ~ "Sex",
+		eyesight_cat ~ "Eyesight"
+	)
+)
+
+tbl_merge(list(tbl_log,tbl_log_bino ),
+					tab_spanner = c("**Model 1**", "**Model 2**")
+)

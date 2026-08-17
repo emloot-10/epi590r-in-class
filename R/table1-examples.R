@@ -111,7 +111,7 @@ tbl_summary(nlsy,
 												 sleep_wknd ~ "Weekend Sleep",
 												 sleep_wkdy ~ "Weekday Sleep"),
 						missing_text = "Missing",
-					statistic = list(starts_with("sleep") ~ "min = {min}; max = {max}",
+					statistic = list(starts_with("sleep") ~ "{min}; {max}",
 													 income =  "({p10}, {p90})"),
 						digits = list(starts_with("sleep") ~ c(1, 1),
 													income ~ c(3, 3))
@@ -123,3 +123,30 @@ tbl_summary(nlsy,
 		all_categorical() ~ "chisq.test"
 	)) %>% add_overall(col_label = "**Total** N = {N}" ) %>%
 	bold_labels()
+
+##6: Add a footnote to the race/ethnicity variable with a link to the page
+##describing how NLSY classified participants:
+##https://www.nlsinfo.org/content/cohorts/nlsy79/topical-guide/household/race-ethnicity-immigration-data
+
+tbl_summary(nlsy,
+						by = sex_cat,
+						include = c(sex_cat,, region_cat, race_eth_cat, income, starts_with("sleep")),
+						label = list(region_cat ~ "Region",
+												 race_eth_cat ~ "Race/Ethnicity",
+												 income ~ "Income",
+												 sleep_wknd ~ "Weekend Sleep",
+												 sleep_wkdy ~ "Weekday Sleep"),
+						missing_text = "Missing",
+						statistic = list(starts_with("sleep") ~ "{min};{max}",
+														 income =  "({p10}, {p90})"),
+						digits = list(starts_with("sleep") ~ c(1, 1),
+													income ~ c(3, 3))
+						) %>%
+	add_p (test = list(
+		all_continuous() ~ "t.test",
+		all_categorical() ~ "chisq.test"
+	)) %>% add_overall(col_label = "**Total** N = {N}" ) %>%
+	bold_labels() |>
+	modify_footnote_body(footnote = "https://www.nlsinfo.org/content/cohorts/nlsy79/topical-guide/household/race-ethnicity-immigration-data",
+											 columns = "label",
+											 rows = variable == "race_eth_cat" & row_type == "label")
