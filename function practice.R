@@ -34,5 +34,57 @@ raise<- function(x,power = 2){
 }
 
 raise(2)
+raise(9,9)
 
-raise(2,15)
+
+#standard deviation function
+
+standdev <- function(x, na.rm = TRUE){
+	n <- length(x)
+	xbar<- sum(x)/n
+	sdval<-sqrt((sum(x-xbar)^2)/n-1)
+	return (sdval)}
+
+standdev(c(1,2,3,4,5))
+#its not working
+
+
+
+standdev <- function(x, na.rm = TRUE){
+	if (na.rm == FALSE) {
+		print ("NA")
+	} else {na.omit(x)}
+
+}
+
+
+# real answer
+
+standdev <- function(x, na.rm = TRUE){
+	if (na.rm == FALSE){na.omit(x)
+		}else{
+	cleanx<-na.omit(x)
+	dmean_x <- cleanx-mean(cleanx)
+	sqrd_dmean_x <- dmean_x^2
+	summed <- sum(sqrd_dmean_x)
+	n_min_one <- length(cleanx) - 1
+	fin <- sqrt(summed / n_min_one)
+	if (length(cleanx) < 2){
+		print("NA")
+	} else {
+		return (fin)
+	}
+		}
+
+}
+standdev(c(234, 345, 456, 567, 687))
+sd(c(234, 345, 456, 567, 687))
+
+standdev(c(1,2), na.rm = FALSE)
+standdev(c(1,2), na.rm = TRUE)
+
+standdev(nlsy$income)
+
+
+
+
