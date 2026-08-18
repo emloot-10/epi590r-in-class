@@ -2,7 +2,7 @@
 title: "gtsummary in quarto"
 format:
   html:
-    theme: yeti
+    theme: sandstone
 execute:
   echo: false
 ---
@@ -62,17 +62,26 @@ tbl_summary(
 ```{r}
 #| label: tbl-sleep
 #| tbl-cap: "Descriptive statistics including sleep"
-tbl_summary(
+tbl_sleep<-tbl_summary(
 	nlsy,
 	by = sex_cat,
 	include = c(sleep_wknd, sleep_wkdy, region_cat),
 	label = list(
 		sleep_wknd ~ "Weekend sleep",
 		sleep_wkdy ~ "Weekday sleep",
-		region_cat ~ "Region")) %>% add_overall()
+		region_cat ~ "Region"),
+	statistic = all_continuous()~"{median}") %>% add_overall()
 	
-
-
+tbl_sleep
 
 ```
 There were a lot of people who slept (@tbl-sleep)
+```{r}
+med_sleeper <- median(nlsy$sleep_wknd, na.rm = TRUE)
+
+inline_text(tbl_sleep, variable = "sleep_wknd", column = "stat_0", pattern = "{median}")
+```
+
+the median amount of sleep on weekends was `r inline_text(tbl_sleep, variable = "sleep_wknd", column = "stat_0", pattern = "{median}")` hours
+
+
