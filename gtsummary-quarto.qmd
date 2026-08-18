@@ -73,13 +73,27 @@ tbl_sleep<-tbl_summary(
 	statistic = all_continuous()~"{median}") %>% add_overall()
 	
 tbl_sleep
-
 ```
+
 There were a lot of people who slept (@tbl-sleep)
+```{r}
+#|label: tbl-sleep-means
+#|tbl-cap: "Means and SDs of sleep"
+tbl_sleep2<-tbl_summary(nlsy,
+												include = c(starts_with("sleep"), sex_cat), 
+												by = region_cat,
+												statistic = list(all_continuous() ~ "{mean}, sd = {sd}")) %>%
+		add_overall()
+tbl_sleep2
+```
+
 ```{r}
 med_sleeper <- median(nlsy$sleep_wknd, na.rm = TRUE)
 
 inline_text(tbl_sleep, variable = "sleep_wknd", column = "stat_0", pattern = "{median}")
+
+inline_text(tbl_sleep2, variable = "sleep_wknd", column = "stat_0", pattern = "{mean}")
+
 ```
 the median amount of sleep on weekends was `r med_sleeper` hours.
 the median amount of sleep on weekends was `r inline_text(tbl_sleep, variable = "sleep_wknd", column = "stat_0", pattern = "{median}")` hours.
