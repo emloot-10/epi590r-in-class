@@ -81,7 +81,7 @@ med_sleeper <- median(nlsy$sleep_wknd, na.rm = TRUE)
 
 inline_text(tbl_sleep, variable = "sleep_wknd", column = "stat_0", pattern = "{median}")
 ```
-
-the median amount of sleep on weekends was `r inline_text(tbl_sleep, variable = "sleep_wknd", column = "stat_0", pattern = "{median}")` hours
+the median amount of sleep on weekends was `r med_sleeper` hours.
+the median amount of sleep on weekends was `r inline_text(tbl_sleep, variable = "sleep_wknd", column = "stat_0", pattern = "{median}")` hours.
 
 
